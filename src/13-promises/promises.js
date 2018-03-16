@@ -27,3 +27,11 @@ export const simplePromise = (value) => new Promise((resolve, reject) => {
         reject('Invalid value');
     }
 });
+
+export const chamarApiPromise = (endereco) => new Promise((funcaoSucesso, funcaoFalha) => {
+
+    if (endereco === '/api/contabil') 
+      funcaoSucesso(endereco);
+    else
+      funcaoFalha(endereco); 
+});

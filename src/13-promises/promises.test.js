@@ -1,4 +1,4 @@
-import { promiseDef, simplePromise } from './promises';
+import { promiseDef, simplePromise, chamarApiPromise } from './promises';
 
 test('promises def', () => {
 
@@ -21,14 +21,21 @@ test('promises def', () => {
  * Fazer junto
  */
 test('simple promise chaining', (done) => {
-    done();
+    
+    simplePromise('Valor')
+           .then( v => console.log('Meu valor ', v))
+           .then(() => done());
+
 });
 
 /**
  * Fazer junto
  */
 test('simple promise error catching chaining', (done) => {
-    done();
+    simplePromise()
+           .then( v => console.log('Meu valor na função com erro ', v))
+           .catch(error => console.log('Erro: ', error))
+           .then(() => done());
 });
 
 /**
@@ -38,6 +45,27 @@ test('simple promise error catching chaining', (done) => {
  */
 test('refactoring callback exercise', () => {
 
+    chamarApiPromise('/api/contabil')
+            .then(firstResult => {
+                console.log('First result: ', firstResult);                
+                return firstResult; 
+            })
+            .then(secondResult => {
+                console.log('Second result: ', secondResult);
+                return secondResult; 
+            })
+            .then(thirdResult => {
+                console.log('Third result: ', thirdResult);
+                return thirdResult; 
+            })
+            .then(fourthResult => {
+                console.log('Fourth result: ', fourthResult);
+                return fourthResult; 
+            })                                    
+            .then(() => done());  
+
+            //sem o catch não apresenta o erro caso ocorra em algum dos then's 
+            // o erro é omitido
 });
 
 /**
@@ -46,5 +74,26 @@ test('refactoring callback exercise', () => {
  * Refatorar o exercício do encadeamento dos callbacks para utilizar o encadeamento das promises.
  */
 test('refactoring callback chaining promises', () => {
+
+    chamarApiPromise('/api/contabil')
+    .then(firstResult => {
+        console.log('First result: ', firstResult);                
+        return chamarApiPromise(''); 
+    })
+    //colocando o retorno chamando o metodo novamente
+    .then(secondResult => {
+        console.log('Second result: ', secondResult);
+        return secondResult; 
+    })
+    .then(thirdResult => {
+        console.log('Third result: ', thirdResult);
+        return thirdResult; 
+    })
+    .then(fourthResult => {
+        console.log('Fourth result: ', fourthResult);
+        return fourthResult; 
+    })                                    
+    .catch(error => console.log('Erro: ', error))
+    .then(() => done());    
 
 });
